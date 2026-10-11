@@ -1,0 +1,28 @@
+# Local / editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# Sensitive local configuration (never commit real secrets)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local test data / real user data
+data/private/
+private/
+local-data/
+*.local.json
+
+# Temporary artifacts
+tmp/
+temp/
+*.tmp
