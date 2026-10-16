@@ -80,6 +80,7 @@ try {
   await page.locator("#screen-setup").waitFor({state:"visible"});
   await page.locator('[data-preset="exam"]').click();
   checks(await page.locator("#task-list .task-row").count()===4,"Study template populates tasks");
+  await page.locator("#advanced-settings summary").click();
   await page.locator("#daily-limit").fill("180");
   await page.locator("#make-plan").click();
   await page.waitForURL("**/#plan");
