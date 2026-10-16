@@ -7,7 +7,7 @@
   --action-shadow:#234C3E;--outline:#485D50;--line:#E2E4D9;--focus:#2149A1;
   --fast:180ms;--medium:250ms;--press-in:75ms;--press-out:130ms;
   --ease-exit:cubic-bezier(.22,1,.36,1);--ease-press:cubic-bezier(.2,0,.2,1);
-  font-family:"Hiragino Maru Gothic ProN","Yu Gothic","Hiragino Kaku Gothic ProN",system-ui,sans-serif;
+  font-family:"Hiragino Maru Gothic ProN","Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans CJK JP","Noto Sans JP",system-ui,sans-serif;
 }
 * {box-sizing:border-box;}
 html {scroll-behavior:smooth;}
@@ -27,7 +27,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible {
 .app-shell {width:min(100% - 32px,1030px);margin:auto;min-height:100vh;display:flex;flex-direction:column;}
 .site-header {display:flex;justify-content:space-between;align-items:center;gap:10px;
   min-height:92px;border-bottom:2px dashed #D7DCCF;}
-.brand {text-decoration:none;display:flex;align-items:center;gap:13px;}
+.brand {text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:13px;}
 .brand-pixel {position:relative;width:37px;height:37px;border:2px solid var(--outline);
   border-radius:10px;background:var(--mint);box-shadow:3px 3px 0 #8FB9A2;flex-shrink:0;}
 .brand-pixel i {position:absolute;width:6px;height:6px;background:var(--action);}
