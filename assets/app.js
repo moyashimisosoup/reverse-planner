@@ -8,6 +8,13 @@ const hm=d=>two(d.getHours())+":"+two(d.getMinutes());
 const stamp=d=>((dateKey(d)===dateKey(new Date()))?"":(d.getMonth()+1)+"/"+d.getDate()+" ")+hm(d);
 const fmtMinutes=n=>n>=60?Math.floor(n/60)+"時間"+(n%60?n%60+"分":""):n+"分";
 const niceDay=key=>{const d=new Date(key+"T12:00:00");return (d.getMonth()+1)+"/"+d.getDate()+"（"+"日月火水木金土"[d.getDay()]+"）";};
+const timeCell=(start,end)=>{
+  const sd=dateKey(start),ed=dateKey(end),today=dateKey(new Date());
+  const dateLabel=sd===today?"":(start.getMonth()+1)+"/"+start.getDate();
+  const endText=sd===ed?hm(end):(end.getMonth()+1)+"/"+end.getDate()+" "+hm(end);
+  return (dateLabel?'<small class="timeline-day">'+esc(dateLabel)+"</small>":"")+
+    "<strong>"+hm(start)+"</strong><span>〜 "+esc(endText)+"</span>";
+};
 const millis=()=>Date.now();
 
 let raw=null;
@@ -143,7 +150,7 @@ function renderPlan(){
   $("timeline-title").textContent=clock?"時間ごとの予定":"日ごとの予定";
   $("timeline-hint").textContent=clock?"上から順に進もう":"今日から締切まで";
   $("timeline").innerHTML=clock?plan.items.map(item=>
-    '<div class="timeline-item"><div class="timeline-time">'+esc(stamp(item.start))+"<br>〜 "+esc(stamp(item.end))+"</div>"+
+    '<div class="timeline-item"><div class="timeline-time is-clock">'+timeCell(item.start,item.end)+"</div>"+
     '<div class="timeline-card '+(item.buffer?"is-buffer":"")+'"><div><strong>'+esc(item.name)+"</strong><small>"+
     item.minutes+'分</small></div><span class="tag">'+(item.buffer?"余裕時間":"QUEST")+"</span></div></div>").join(""):
     plan.days.map(day=>{
