@@ -32,18 +32,24 @@ export function clockPlan({deadline, tasks = [], buffer = 0}, now = new Date()) 
   if (!Number.isInteger(slack) || slack < 0 || slack > 240) return {error: "予備時間は0〜240分で指定してください。"};
   const remaining = activeTasks(tasks);
   const work = totalMinutes(tasks);
-  const required = work + slack;
+  const effectiveSlack = remaining.length ? slack : 0;
+  const required = work + effectiveSlack;
   let pointer = due.getTime() - required * 60000;
   const items = remaining.map(task => {
     const start = new Date(pointer);
     pointer += Number(task.minutes) * 60000;
     return {taskId: task.id, name: task.name, minutes: Number(task.minutes), start, end: new Date(pointer)};
   });
-  if (slack) items.push({taskId: "__buffer__", name: "予備・調整時間", minutes: slack, start: new Date(pointer), end: due, buffer: true});
+  if (effectiveSlack) items.push({taskId: "__buffer__", name: "予備・調整時間", minutes: effectiveSlack, start: new Date(pointer), end: due, buffer: true});
   const start = new Date(due.getTime() - required * 60000);
   const deficit = Math.max(0, Math.ceil((now.getTime() - start.getTime()) / 60000));
-  return {due, start, work, buffer: slack, required, items, remainingCount: remaining.length, deficit,
-    suggestedDue: new Date(now.getTime() + required * 60000)};
+  const suggestedDue = new Date(now.getTime() + required * 60000);
+  if (suggestedDue.getSeconds() || suggestedDue.getMilliseconds()) {
+    suggestedDue.setMinutes(suggestedDue.getMinutes() + 1);
+    suggestedDue.setSeconds(0, 0);
+  }
+  return {due, start, work, buffer: effectiveSlack, required, items, remainingCount: remaining.length, deficit,
+    suggestedDue};
 }
 export function daysPlan({dueDate, tasks = [], dailyLimit = 60, reserveDays = 0, offDays = [0]}, today = new Date()) {
   const due = dateAtNoon(dueDate);
