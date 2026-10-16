@@ -63,7 +63,7 @@ export function daysPlan({dueDate, tasks = [], dailyLimit = 60, reserveDays = 0,
     return {key: dateKey(current), weekday: current.getDay(), rest: holidays.includes(current.getDay()), reserve: false, items: [], used: 0};
   });
   const usable = days.filter(d => !d.rest);
-  usable.slice(-reserve).forEach(d => {d.reserve = true;});
+  if (reserve > 0) usable.slice(-reserve).forEach(d => {d.reserve = true;});
   const working = usable.filter(d => !d.reserve);
   const remaining = activeTasks(tasks);
   const required = totalMinutes(tasks);
