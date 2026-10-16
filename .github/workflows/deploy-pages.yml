@@ -38,6 +38,14 @@ jobs:
         run: npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1
       - name: Run Chromium browser smoke tests
         run: node tests/browser-smoke.mjs
+      - name: Upload UI screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v02-ui-screenshots
+          path: test-screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Verify static references
         run: |
           test -s index.html
