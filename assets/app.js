@@ -97,13 +97,13 @@ function renderSetup(){
   $("setup-error").hidden=true;
   renderTasks();
 }
-function renderTasks(){
+function renderTasks(newId=null){
   const ts=sheet(data).tasks;
   $("task-count").textContent=ts.filter(t=>!t.done).length+"こ";
   if(!ts.length){$("task-list").innerHTML='<li class="empty-state">まだ何も登録されていません。<br>まずは下から追加してみよう。</li>';return;}
   $("task-list").innerHTML=ts.map((t,i)=>{
     const name=esc(t.name),minutes=Number(t.minutes);
-    return '<li class="task-row '+(t.done?"is-done":"")+'">'+
+    return '<li class="task-row '+(t.done?"is-done":"")+(t.id===newId?" is-new":"")+'">'+
       '<label class="checkbox"><span class="sr-only">完了</span><input type="checkbox" data-task-field="done" data-index="'+i+'" '+(t.done?"checked":"")+' aria-label="'+name+'を完了"></label>'+
       '<label class="task-name"><span class="sr-only">やることの名前</span><input type="text" data-task-field="name" data-index="'+i+'" value="'+name+'" maxlength="80"></label>'+
       '<label class="task-minutes"><span class="sr-only">所要時間（分）</span><input type="number" data-task-field="minutes" data-index="'+i+'" value="'+minutes+'" min="1" max="1440">分</label>'+
@@ -272,7 +272,7 @@ document.querySelectorAll("[data-off-day]").forEach(x=>x.addEventListener("chang
 $("preset-list").addEventListener("click",ev=>{
   const b=ev.target.closest("[data-preset]");if(!b)return;
   const p=PRESETS.find(x=>x.id===b.dataset.preset);if(!p)return;
-  if(sheet(data).tasks.length&&!confirm("この計画の作業一覧をサンプルに置き換えますか？\nほかの種類の計画には影響しません。"))return;
+  if(data.sheets[p.mode][data.scale].tasks.length&&!confirm("この計画の作業一覧をサンプルに置き換えますか？\nほかの種類の計画には影響しません。"))return;
   applyPreset(data,p);
   persist();renderSetup();
 });
@@ -280,8 +280,8 @@ $("add-task-form").addEventListener("submit",ev=>{
   ev.preventDefault();
   const name=$("new-task-name").value.trim(),minutes=Number($("new-task-minutes").value);
   if(!name||!Number.isInteger(minutes)||minutes<1||minutes>1440){errorSetup("やることの名前と1〜1440分の時間を入力してください。");return;}
-  sheet(data).tasks.push(task(name,minutes));$("new-task-name").value="";
-  persist();renderTasks();$("new-task-name").focus();
+  const entry=task(name,minutes);sheet(data).tasks.push(entry);$("new-task-name").value="";
+  persist();renderTasks(entry.id);$("new-task-name").focus();
 });
 document.querySelectorAll("[data-minutes]").forEach(b=>b.addEventListener("click",()=>{
   $("new-task-minutes").value=b.dataset.minutes;
