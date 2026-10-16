@@ -2,7 +2,7 @@
 // Requires Playwright and a locally installed Chrome/Chromium.
 import assert from "node:assert/strict";
 import {createServer} from "node:http";
-import {readFile} from "node:fs/promises";
+import {readFile,mkdir} from "node:fs/promises";
 import {resolve, extname} from "node:path";
 import {fileURLToPath} from "node:url";
 import {chromium} from "playwright";
@@ -22,6 +22,7 @@ const server=createServer(async (req,res)=>{
 });
 await new Promise(r=>server.listen(0,"127.0.0.1",r));
 const host="http://127.0.0.1:"+server.address().port;
+await mkdir("test-screenshots",{recursive:true});
 const cases=[];
 const checks=(condition,title)=>{assert.ok(condition,title);cases.push(title);};
 const yyyyDate=d=>{
@@ -39,17 +40,20 @@ try {
   await page.goto(host+"/");
   checks(await page.locator("#screen-home").isVisible(),"Initial home visible");
   checks(await page.locator(".choice-card").count()===2,"Home presents two choices");
+  await page.screenshot({path:"test-screenshots/home-390.png",fullPage:true});
   const widths=[320,390,1280];
   for(const width of widths) {
     await page.setViewportSize({width,height:860});
     const sizes=await page.evaluate(()=>({doc:document.documentElement.scrollWidth,view:innerWidth}));
     checks(sizes.doc<=sizes.view+2,"Home has no horizontal overflow at "+width+"px: "+JSON.stringify(sizes));
+    if(width===320||width===1280)await page.screenshot({path:"test-screenshots/home-"+width+".png",fullPage:true});
   }
   await page.setViewportSize({width:390,height:844});
   await page.locator('[data-choose-scale="clock"]').click();
   await page.waitForURL("**/#setup");
   await page.locator("#screen-setup").waitFor({state:"visible"});
   checks(await page.locator("#screen-setup").isVisible(),"Clock setup appears");
+  await page.screenshot({path:"test-screenshots/setup-mobile.png",fullPage:true});
   const deadline=new Date(Date.now()+5*3600000);
   await page.locator("#clock-deadline").fill(yyyyTime(deadline));
   await page.locator("#new-task-name").fill("ためしに勉強");
@@ -57,10 +61,12 @@ try {
   checks(await page.locator("#new-task-minutes").inputValue()==="30","Duration chips set minutes");
   await page.locator(".add-submit").click();
   checks(await page.locator("#task-list .task-row").count()===1,"Adding task shows one card");
+  await page.screenshot({path:"test-screenshots/task-added-mobile.png",fullPage:true});
   await page.locator("#make-plan").click();
   await page.waitForURL("**/#plan");
   await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#screen-plan").isVisible(),"Clock plan appears");
+  await page.screenshot({path:"test-screenshots/clock-plan-mobile.png",fullPage:true});
   checks((await page.locator("#result-main").textContent()).includes(":"),"Start time displayed");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
@@ -68,6 +74,7 @@ try {
   checks(await page.locator("#focus-task").textContent()==="ためしに勉強","Run focuses on current task");
   await page.locator('[data-run="start"]').click();
   checks(await page.locator("#timer-clock").isVisible(),"Timer starts");
+  await page.screenshot({path:"test-screenshots/timer-mobile.png",fullPage:true});
   await page.locator('[data-run="done"]').click();
   checks((await page.locator("#focus-task").textContent()).includes("全部できた"),"Task marked done by explicit click");
   await page.reload();
@@ -86,6 +93,7 @@ try {
   await page.waitForURL("**/#plan");
   await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#timeline .timeline-item").count()>0,"Daily plan renders calendar items");
+  await page.screenshot({path:"test-screenshots/days-plan-mobile.png",fullPage:true});
   checks(await page.locator("#start-plan").isEnabled(),"Feasible daily plan can start");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
