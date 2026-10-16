@@ -142,6 +142,11 @@ try {
   await legacyPage.goto(host+"/#home");
   checks(await legacyPage.locator("#resume-card").isVisible(),"Legacy v0.1 data enables resume");
   await legacyPage.screenshot({path:"test-screenshots/saved-plans-mobile.png",fullPage:true});
+  await legacyPage.setViewportSize({width:320,height:860});
+  const savedWidth=await legacyPage.evaluate(()=>({doc:document.documentElement.scrollWidth,view:innerWidth}));
+  checks(savedWidth.doc<=savedWidth.view+2,"Saved-plan picker also fits 320px ("+JSON.stringify(savedWidth)+")");
+  await legacyPage.screenshot({path:"test-screenshots/saved-plans-320.png",fullPage:true});
+  await legacyPage.setViewportSize({width:375,height:812});
   checks(await legacyPage.locator('#saved-plans [data-saved-mode="study"][data-saved-scale="days"]').isVisible(),
     "Saved study plan appears without choosing a template");
   await legacyPage.locator("#resume-button").click();
