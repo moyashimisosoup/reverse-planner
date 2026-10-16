@@ -57,7 +57,16 @@ try {
     if(width===320||width===1280)await page.screenshot({path:"test-screenshots/home-"+width+".png",fullPage:true});
   }
   await page.setViewportSize({width:390,height:844});
-  await page.locator('[data-choose-scale="clock"]').click();
+  const choice=page.locator('[data-choose-scale="clock"]');
+  const rect=await choice.boundingBox();
+  assert.ok(rect,"Clock choice must be visible to mouse");
+  await page.mouse.move(rect.x+rect.width/2,rect.y+rect.height/2);
+  await page.mouse.down();
+  await page.waitForTimeout(160);
+  const pressed=await choice.evaluate(el=>getComputedStyle(el).transform);
+  checks(pressed!=="none"&&pressed!=="matrix(1, 0, 0, 1, 0, 0)",
+    "Pixel choice button physically depresses when pressed: "+pressed);
+  await page.mouse.up();
   await page.waitForURL("**/#setup");
   await page.locator("#screen-setup").waitFor({state:"visible"});
   checks(await page.locator("#screen-setup").isVisible(),"Clock setup appears");
@@ -132,6 +141,7 @@ try {
   });
   await legacyPage.goto(host+"/#home");
   checks(await legacyPage.locator("#resume-card").isVisible(),"Legacy v0.1 data enables resume");
+  await legacyPage.screenshot({path:"test-screenshots/saved-plans-mobile.png",fullPage:true});
   checks(await legacyPage.locator('#saved-plans [data-saved-mode="study"][data-saved-scale="days"]').isVisible(),
     "Saved study plan appears without choosing a template");
   await legacyPage.locator("#resume-button").click();
