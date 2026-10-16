@@ -127,15 +127,23 @@ try {
     const emptyDays={dueDate:date,dailyLimit:80,reserveDays:0,offDays:[],tasks:[]};
     const state={schema:1,mode:"life",scale:"clock",sheets:{
       life:{clock:{deadline:time,buffer:15,tasks:[{id:"legacy-one",name:"古いデータ",minutes:20,done:false}]},days:emptyDays},
-      study:{clock:emptyClock,days:emptyDays}},timer:null,extraFutureField:{keep:"yes"}};
+      study:{clock:emptyClock,days:{...emptyDays,tasks:[{id:"legacy-study",name:"昔の理科",minutes:30,done:false}]}}},timer:null,extraFutureField:{keep:"yes"}};
     localStorage.setItem("reverse-planner:prototype:v1",JSON.stringify(state));
   });
   await legacyPage.goto(host+"/#home");
   checks(await legacyPage.locator("#resume-card").isVisible(),"Legacy v0.1 data enables resume");
+  checks(await legacyPage.locator('#saved-plans [data-saved-mode="study"][data-saved-scale="days"]').isVisible(),
+    "Saved study plan appears without choosing a template");
   await legacyPage.locator("#resume-button").click();
   await legacyPage.waitForURL("**/#plan");
   await legacyPage.locator("#screen-plan").waitFor({state:"visible"});
   checks((await legacyPage.locator("#timeline").textContent()).includes("古いデータ"),"Existing task shown in plan");
+  await legacyPage.goto(host+"/#home");
+  await legacyPage.locator('#saved-plans [data-saved-mode="study"][data-saved-scale="days"]').click();
+  await legacyPage.waitForURL("**/#plan");
+  await legacyPage.locator("#screen-plan").waitFor({state:"visible"});
+  checks((await legacyPage.locator("#timeline").textContent()).includes("昔の理科"),
+    "Previously saved study plan opens without overwriting it");
   checks((await legacyPage.evaluate(()=>JSON.parse(localStorage.getItem("reverse-planner:prototype:v1")).extraFutureField.keep))==="yes","Unknown legacy fields preserved");
   await legacyCtx.close();
 
