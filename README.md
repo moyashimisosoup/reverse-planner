@@ -2,7 +2,20 @@
 
 期限・終了時刻から逆算して、行動の計画・実行・振り返り・再計画を支援するプロジェクト。
 
-> Status: **research / design bootstrap**（2026-10-12）。アプリや自動スケジューラーはまだ実装・公開していません。
+> Status: **Web prototype v0.1**（2026-10-17）。静的Web試作版のコードを追加しました。公開URLはGitHub Pagesの設定・配信成功後に有効になります。
+
+## Web試作版 v0.1
+
+- 想定公開URL（Pages設定・配信が成功した場合）：https://yama-books.github.io/reverse-planner/
+- [HTML](index.html) / [表示スタイル](assets/app.css) / [アプリの操作](assets/app.js) / [共通計算エンジン](assets/core.mjs)
+- [試作版の操作方法・制限](docs/prototype-v0.1.md)
+- [計算エンジンのテスト](tests/core.test.mjs)（Node.js 18以降で `node --test tests/core.test.mjs`）
+
+**使い方**：「くらし／まなび」を選択し、「時刻から逆算／日付から逆算」を切り替える。作業を追加・編集・完了すると、残り時間とタイムラインが再計算されます。「開始」からタスクタイマーも利用できます（時刻モードのみ）。
+
+**保存**：計画はブラウザ内のローカルストレージに保存されます。別端末との同期、復元用JSON読み込み、学習の習得判定はまだありません。実在する学生の氏名・成績などをリポジトリへ登録しないでください。
+
+**GitHub Pages設定**：このリポジトリの Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/(root)` → Save。デプロイ成功後に上記URLから開けます。
 
 ## 何を作るか
 
@@ -46,4 +59,4 @@
 
 ソースと設計の閲覧を目的にPublicで管理する。現時点ではライセンス未選定で、リポジトリがPublicであることは再利用の包括的な許可を意味しない。コードの再利用条件は実装・公開方針とともに後日決める。
 
-開発状況：設計資料の初期登録段階。GitHub Pagesは未設定。
+開発状況：v0.1静的Web試作版のファイルを登録済み。固定予定・依存関係・学習の復習計画などは後続開発。GitHub Pagesの公開確認は別途必要。
