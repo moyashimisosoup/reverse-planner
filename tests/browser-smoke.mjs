@@ -37,6 +37,14 @@ try {
   const page=await ctx.newPage();
   const errors=[];
   page.on("pageerror",e=>errors.push(e.message));
+  const assertNarrow=async(name)=>{
+    await page.setViewportSize({width:320,height:860});
+    const dims=await page.evaluate(()=>({doc:document.documentElement.scrollWidth,view:innerWidth}));
+    checks(dims.doc<=dims.view+2,name+" does not overflow at 320px ("+JSON.stringify(dims)+")");
+    await page.screenshot({path:"test-screenshots/"+name+"-320.png",fullPage:true});
+    await page.setViewportSize({width:390,height:844});
+  };
+
   await page.goto(host+"/");
   checks(await page.locator("#screen-home").isVisible(),"Initial home visible");
   checks(await page.locator(".choice-card").count()===2,"Home presents two choices");
@@ -62,11 +70,14 @@ try {
   await page.locator(".add-submit").click();
   checks(await page.locator("#task-list .task-row").count()===1,"Adding task shows one card");
   await page.screenshot({path:"test-screenshots/task-added-mobile.png",fullPage:true});
+  await assertNarrow("setup");
   await page.locator("#make-plan").click();
   await page.waitForURL("**/#plan");
   await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#screen-plan").isVisible(),"Clock plan appears");
   await page.screenshot({path:"test-screenshots/clock-plan-mobile.png",fullPage:true});
+  checks(await page.locator(".timeline-time.is-clock strong").count()>0,"Clock times use compact vertical labels");
+  await assertNarrow("clock-plan");
   checks((await page.locator("#result-main").textContent()).includes(":"),"Start time displayed");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
@@ -75,6 +86,7 @@ try {
   await page.locator('[data-run="start"]').click();
   checks(await page.locator("#timer-clock").isVisible(),"Timer starts");
   await page.screenshot({path:"test-screenshots/timer-mobile.png",fullPage:true});
+  await assertNarrow("timer");
   await page.locator('[data-run="done"]').click();
   checks((await page.locator("#focus-task").textContent()).includes("全部できた"),"Task marked done by explicit click");
   await page.reload();
@@ -94,6 +106,7 @@ try {
   await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#timeline .timeline-item").count()>0,"Daily plan renders calendar items");
   await page.screenshot({path:"test-screenshots/days-plan-mobile.png",fullPage:true});
+  await assertNarrow("days-plan");
   checks(await page.locator("#start-plan").isEnabled(),"Feasible daily plan can start");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
