@@ -302,6 +302,8 @@ $("preset-list").addEventListener("click",ev=>{
   const b=ev.target.closest("[data-preset]");if(!b)return;
   const p=PRESETS.find(x=>x.id===b.dataset.preset);if(!p)return;
   if(data.sheets[p.mode][data.scale].tasks.length&&!confirm("この計画の作業一覧をサンプルに置き換えますか？\nほかの種類の計画には影響しません。"))return;
+  const targetScope=p.mode+":"+data.scale;
+  if(data.timer?.key===targetScope)data.timer=null;
   applyPreset(data,p);
   persist();renderSetup();
 });
