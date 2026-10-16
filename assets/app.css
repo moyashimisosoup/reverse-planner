@@ -116,7 +116,8 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible {
 .counter {margin-left:auto;border-radius:20px;background:#EDF1E8;color:var(--action);font-size:12px;padding:4px 10px;font-weight:800;}
 .task-list {list-style:none;padding:0;margin:5px 0 13px;display:grid;gap:9px;}
 .task-row {display:flex;gap:10px;align-items:center;border:1.5px solid #CCD7CB;border-radius:12px;background:#FAFBF5;
-  padding:10px 10px;min-width:0;animation:task-in var(--fast) var(--ease-exit) both;}
+  padding:10px 10px;min-width:0;}
+.task-row.is-new {animation:task-in var(--fast) var(--ease-exit) both;}
 @keyframes task-in {from{transform:translateX(16px);opacity:.68;}to{transform:translateX(0);opacity:1;}}
 .task-row .checkbox {width:24px;flex:0 0 24px;}
 .task-row .checkbox input {width:20px;height:20px;accent-color:var(--action);}
@@ -189,7 +190,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible {
 .timeline-time {padding:10px 6px 8px 2px;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;
   color:#68786C;white-space:pre-line;border-right:2px dashed #C3D1C4;}
 .timeline-card {background:var(--surface);border:2px solid #C7D5C8;border-radius:11px;padding:13px 16px;min-width:0;
-  display:flex;align-items:center;justify-content:space-between;gap:9px;animation:task-in var(--fast) var(--ease-exit) both;}
+  display:flex;align-items:center;justify-content:space-between;gap:9px;}
 .timeline-card.is-rest {background:#F4F1E8;border-style:dashed;}
 .timeline-card.is-buffer {background:#FFF0D1;}
 .timeline-card strong {display:block;font-size:14px;overflow-wrap:anywhere;}
