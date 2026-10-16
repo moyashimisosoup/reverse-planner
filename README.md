@@ -2,11 +2,12 @@
 
 期限・終了時刻から逆算して、行動の計画・実行・振り返り・再計画を支援するプロジェクト。
 
-> Status: **Web prototype v0.1**（2026-10-17）。静的Web試作版のコードを追加しました。公開URLはGitHub Pagesの設定・配信成功後に有効になります。
+> Status: **Web prototype v0.1 公開中**（2026-10-17）。GitHub ActionsでテストとPages配信に成功し、公開ページ・アセットのHTTP 200を確認しています。iPhone等の実機操作は未検証です。
 
 ## Web試作版 v0.1
 
-- 想定公開URL（Pages設定・配信が成功した場合）：https://yama-books.github.io/reverse-planner/
+- **公開URL**：https://yama-books.github.io/reverse-planner/
+- [デプロイ実行記録（成功）](https://github.com/yama-books/reverse-planner/actions/runs/38941776421) / [ワークフロー](.github/workflows/deploy-pages.yml)
 - [HTML](index.html) / [表示スタイル](assets/app.css) / [アプリの操作](assets/app.js) / [共通計算エンジン](assets/core.mjs)
 - [試作版の操作方法・制限](docs/prototype-v0.1.md)
 - [計算エンジンのテスト](tests/core.test.mjs)（Node.js 18以降で `node --test tests/core.test.mjs`）
@@ -15,7 +16,7 @@
 
 **保存**：計画はブラウザ内のローカルストレージに保存されます。別端末との同期、復元用JSON読み込み、学習の習得判定はまだありません。実在する学生の氏名・成績などをリポジトリへ登録しないでください。
 
-**GitHub Pages設定**：このリポジトリの Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/(root)` → Save。デプロイ成功後に上記URLから開けます。
+**GitHub Pages公開**：`Settings → Pages → Build and deployment → GitHub Actions` を使用。`main` のアプリ関連ファイル変更でテスト・デプロイを自動実行します。詳細は [公開運用記録](docs/deployment.md)。
 
 ## 何を作るか
 
@@ -59,4 +60,4 @@
 
 ソースと設計の閲覧を目的にPublicで管理する。現時点ではライセンス未選定で、リポジトリがPublicであることは再利用の包括的な許可を意味しない。コードの再利用条件は実装・公開方針とともに後日決める。
 
-開発状況：v0.1静的Web試作版のファイルを登録済み。固定予定・依存関係・学習の復習計画などは後続開発。GitHub Pagesの公開確認は別途必要。
+開発状況：**v0.1公開済み**。固定予定・依存関係・学習の復習計画などは後続開発。実機操作テストは未実施。
