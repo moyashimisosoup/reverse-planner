@@ -265,8 +265,10 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible {
   .privacy-note,.site-footer {font-size:10px;}
 }
 @media(max-width:350px) {
+  .brand {min-width:0;}
+  .brand-text {overflow-wrap:anywhere;}
   .brand-text small {display:none;}
-  .version-pill {font-size:7px;}
+  .version-pill {display:none;}
   .choice-card {gap:9px;}
   .choice-art {min-width:60px;}
   .choice-copy strong {font-size:19px;}
