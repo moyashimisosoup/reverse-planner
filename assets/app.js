@@ -71,10 +71,23 @@ function renderHome(){
   const resume=savedState&&hasAnyTasks(data);
   $("resume-card").hidden=!resume;
   if(resume) {
-    const category=data.mode==="study"?"学習":"くらし";
-    $("resume-description").textContent=category+"・"+(data.scale==="clock"?"時刻から逆算":"日付から逆算")+
+    const category=data.mode==="study"?"まなび":"くらし";
+    $("resume-description").textContent=category+"・"+(data.scale==="clock"?"時刻の計画":"日付の計画")+
       "　残り"+activeCount(data)+"件";
   }
+  const available=["life","study"].flatMap(mode=>["clock","days"].map(scale=>({
+    mode,scale,tasks:data.sheets[mode][scale].tasks
+  }))).filter(x=>x.tasks.length>0);
+  const list=$("saved-plans");
+  list.hidden=!savedState||!available.length;
+  list.innerHTML=available.length
+    ?'<p class="mini-label">SAVED QUESTS ／ 保存した計画</p><div class="saved-plan-buttons">'+
+      available.map(x=>{
+        const label=(x.mode==="study"?"✎ まなび":"⌂ くらし")+"・"+(x.scale==="clock"?"時刻":"日付");
+        const remaining=x.tasks.filter(t=>!t.done).length;
+        return '<button type="button" data-saved-mode="'+x.mode+'" data-saved-scale="'+x.scale+'">'+
+          '<strong>'+label+'</strong><small>残り'+remaining+'件　↗</small></button>';
+      }).join("")+"</div>":"";
 }
 function readForm(){
   const s=sheet(data);
@@ -261,6 +274,15 @@ document.querySelectorAll("[data-choose-scale]").forEach(b=>b.addEventListener("
   go("setup");
 }));
 $("resume-button").addEventListener("click",()=>go(validateSetup(data)?"setup":"plan"));
+$("saved-plans").addEventListener("click",event=>{
+  const button=event.target.closest("[data-saved-mode][data-saved-scale]");
+  if(!button)return;
+  const {savedMode,savedScale}=button.dataset;
+  if(!["life","study"].includes(savedMode)||!["clock","days"].includes(savedScale))return;
+  data.mode=savedMode;data.scale=savedScale;
+  persist();
+  go(validateSetup(data)?"setup":"plan");
+});
 $("back-button").addEventListener("click",()=>go(({setup:"home",plan:"setup",run:"plan"})[screen]||"home"));
 $("edit-plan").addEventListener("click",()=>go("setup"));
 $("back-plan").addEventListener("click",()=>go("plan"));
