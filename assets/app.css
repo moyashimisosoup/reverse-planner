@@ -92,6 +92,14 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible {
 .resume-card > div {display:grid;gap:3px;}
 .resume-card strong {font-size:17px;}
 .resume-card small {font-size:12px;color:var(--muted);}
+.saved-plans {margin:22px auto 0;max-width:800px;padding:16px;border-radius:14px;border:1.5px solid #CBD8CC;background:#FFFDFA;}
+.saved-plans .mini-label {margin:0 0 12px;display:block;}
+.saved-plan-buttons {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+.saved-plan-buttons button {display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;padding:11px 12px;min-height:48px;border:1.5px solid #B6CBBA;background:#F3F8F1;border-radius:9px;}
+.saved-plan-buttons button:active {background:var(--mint);transform:translateY(2px);}
+.saved-plan-buttons strong {font-size:12px;}
+.saved-plan-buttons small {font-size:11px;color:var(--action);}
+@media(max-width:430px){.saved-plan-buttons{grid-template-columns:1fr;}}
 .privacy-note {text-align:center;color:var(--muted);font-size:12px;margin:34px 0 0;}
 .screen-header {text-align:left;margin:13px 0 27px;}
 .screen-header h1 {font-size:clamp(31px,5vw,43px);}
