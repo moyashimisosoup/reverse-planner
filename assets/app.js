@@ -17,8 +17,6 @@ let data=restored.state;
 let storageIssue=restored.status==="invalid";
 let savedState=restored.status==="existing";
 let screen=screenFromHash(window.location.hash);
-let savedMessageTimer=0;
-let completedVisual=false;
 
 function persist() {
   if(storageIssue) {
@@ -223,12 +221,13 @@ function timerAction(action){
   persist();renderRun();
 }
 function markDone(daysMode=false){
-  const first=sheet(data).tasks.find(t=>!t.done);
+  const todayEntry=daysMode?getPlan().days?.find(d=>d.key===dateKey(new Date()))?.items[0]:null;
+  const first=daysMode?sheet(data).tasks.find(t=>t.id===todayEntry?.taskId):sheet(data).tasks.find(t=>!t.done);
   if(!first)return;
   if(daysMode && !confirm("「"+first.name+"」の作業全体が終わりましたか？\n今日割り当てられた分だけではなく、タスク全体を完了にします。"))return;
   first.done=true;
   if(data.timer?.key===scope(data)&&data.timer.taskId===first.id)data.timer=null;
-  persist();completedVisual=true;renderRun();
+  persist();renderRun();
   $("focus-task").classList.add("completed-burst");
   setTimeout(()=>$("focus-task").classList.remove("completed-burst"),300);
 }
