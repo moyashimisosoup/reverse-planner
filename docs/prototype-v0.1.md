@@ -12,8 +12,7 @@
 ## 公開・実行
 
 依存ライブラリやビルドは不要。静的な index.html と assets/ 配下のCSS/ES Modulesで動作する。
-GitHub Pagesはリポジトリの **Settings → Pages → Deploy from a branch → main → /(root) → Save** を指定する。Pagesを有効化し、公開に成功すると標準URLは https://yama-books.github.io/reverse-planner/ となる。
-設定を完了するまではGitHubにファイルがあってもWebアプリは公開されない。
+GitHub Pagesは **Settings → Pages → Source: GitHub Actions** を使用する。公開URLは **https://yama-books.github.io/reverse-planner/**。ワークフローは [`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml) で、テスト、最小静的ファイルの作成、Pagesへの配信を行う。2026-10-17にデプロイ成功と公開ページHTTP 200を確認済み。実機での操作確認は別途必要。
 
 ローカルではモジュール読み込みのため簡易HTTPサーバー（例：python -m http.server 8000）で開く。file:// 直開きはブラウザにより制限される。
 計算コアのテスト：Node.js（18以降）で `node --test tests/core.test.mjs`。
