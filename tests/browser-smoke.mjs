@@ -48,6 +48,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   await page.locator('[data-choose-scale="clock"]').click();
   await page.waitForURL("**/#setup");
+  await page.locator("#screen-setup").waitFor({state:"visible"});
   checks(await page.locator("#screen-setup").isVisible(),"Clock setup appears");
   const deadline=new Date(Date.now()+5*3600000);
   await page.locator("#clock-deadline").fill(yyyyTime(deadline));
@@ -58,10 +59,12 @@ try {
   checks(await page.locator("#task-list .task-row").count()===1,"Adding task shows one card");
   await page.locator("#make-plan").click();
   await page.waitForURL("**/#plan");
+  await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#screen-plan").isVisible(),"Clock plan appears");
   checks((await page.locator("#result-main").textContent()).includes(":"),"Start time displayed");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
+  await page.locator("#screen-run").waitFor({state:"visible"});
   checks(await page.locator("#focus-task").textContent()==="ためしに勉強","Run focuses on current task");
   await page.locator('[data-run="start"]').click();
   checks(await page.locator("#timer-clock").isVisible(),"Timer starts");
@@ -74,15 +77,18 @@ try {
   await page.goto(host+"/#home");
   await page.locator('[data-choose-scale="days"]').click();
   await page.waitForURL("**/#setup");
+  await page.locator("#screen-setup").waitFor({state:"visible"});
   await page.locator('[data-preset="exam"]').click();
   checks(await page.locator("#task-list .task-row").count()===4,"Study template populates tasks");
   await page.locator("#daily-limit").fill("180");
   await page.locator("#make-plan").click();
   await page.waitForURL("**/#plan");
+  await page.locator("#screen-plan").waitFor({state:"visible"});
   checks(await page.locator("#timeline .timeline-item").count()>0,"Daily plan renders calendar items");
   checks(await page.locator("#start-plan").isEnabled(),"Feasible daily plan can start");
   await page.locator("#start-plan").click();
   await page.waitForURL("**/#run");
+  await page.locator("#screen-run").waitFor({state:"visible"});
   checks(await page.locator("#screen-run").isVisible(),"Daily run screen accessible");
   const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem("reverse-planner:prototype:v1")));
   checks(stored.sheets.life.clock.tasks[0].done,"Clock data survives switching to study");
@@ -106,6 +112,7 @@ try {
   checks(await legacyPage.locator("#resume-card").isVisible(),"Legacy v0.1 data enables resume");
   await legacyPage.locator("#resume-button").click();
   await legacyPage.waitForURL("**/#plan");
+  await legacyPage.locator("#screen-plan").waitFor({state:"visible"});
   checks((await legacyPage.locator("#timeline").textContent()).includes("古いデータ"),"Existing task shown in plan");
   checks((await legacyPage.evaluate(()=>JSON.parse(localStorage.getItem("reverse-planner:prototype:v1")).extraFutureField.keep))==="yes","Unknown legacy fields preserved");
   await legacyCtx.close();
