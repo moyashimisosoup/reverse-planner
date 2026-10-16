@@ -8,7 +8,7 @@
 
 - [SOFT PIXEL UI/UX詳細計画](docs/UI_V02_PLAN.md)：レトロゲーム風の柔らかい8bit表現、HOME→入力→計画→実行の一本道、データ互換、検証基準。
 - [モーション選定・実装仕様](docs/MOTION_SPEC_V02.md)：押し込めるボタン、スライドイン、タスク順次表示、完了演出など11件を優先順位つきで整理。
-- **状態**：計画書のみ作成。v0.2のUI実装・実機検証・公開は未着手。現在公開中のアプリはv0.1のまま。
+- **状態**：v0.2を[Draft PR #1](https://github.com/yama-books/reverse-planner/pull/1)で実装・レビュー中。Chromiumブラウザ試験とv0.1データ継承をCIで確認。**未マージ・未公開**、iPhone Safari等の実機確認は未実施。現在公開中のアプリはv0.1のまま。
 
 ## Web試作版 v0.1
 
