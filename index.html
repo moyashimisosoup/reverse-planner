@@ -3,74 +3,119 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f6f5f0">
-  <meta name="description" content="終わりから考える、今日のはじめ方。日常生活やテスト勉強の予定を逆算できる無料の試作アプリ。">
-  <title>Reverse Planner | 終わりから考える、今日のはじめ方。</title>
+  <meta name="theme-color" content="#f6f2e8">
+  <meta name="description" content="終わる時間から、今日のはじめ方を見つける。やさしい8bit風の逆算プランナー。">
+  <title>Reverse Planner | はじめの一歩を、見つけよう</title>
   <link rel="stylesheet" href="./assets/app.css">
   <script type="module" src="./assets/app.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">内容へスキップ</a>
+  <a class="skip-link" href="#screen-title">メイン画面へ</a>
   <div class="app-shell">
     <header class="site-header">
-      <div class="identity">
-        <span class="logo" aria-hidden="true"><span></span><span></span><span></span></span>
-        <div class="identity-name"><strong>REVERSE<span class="identity-dot">.</span>PLANNER</strong><small>終わりから考える、今日のはじめ方。</small></div>
-      </div>
-      <span class="version">PROTOTYPE <b>0.1</b></span>
+      <a class="brand" href="#home" aria-label="Reverse Planner ホームへ">
+        <span class="brand-pixel" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="brand-text">REVERSE<span>★</span>PLANNER<small>おわりから考える、小さな冒険。</small></span>
+      </a>
+      <span class="version-pill">SOFT PIXEL <b>v0.2 preview</b></span>
     </header>
 
-    <main id="main">
-      <section class="intro" aria-labelledby="page-heading">
-        <div class="intro-copy">
-          <p class="eyebrow"><span class="eyebrow-rule"></span> Plan backward, move forward.</p>
-          <h1 id="page-heading">ゴールが決まれば、<br><em>次の一歩</em>が見えてくる。</h1>
-          <p class="lead">終わる時刻や締切日から、必要な行動を逆算します。生活の段取りにも、定期テストの準備にも。</p>
-        </div>
-        <div class="intro-illustration" aria-hidden="true">
-          <div class="orbit outer"></div><div class="orbit middle"></div><div class="orbit inner"></div>
-          <div class="orbit-center">GOAL<span>↗</span></div>
-          <span class="orbit-star star-one">✳</span><span class="orbit-star star-two">✦</span>
-        </div>
-      </section>
-
-      <div class="top-switches">
-        <div class="switch-group" role="group" aria-label="利用シーンを選択">
-          <span class="switch-label">SCENE</span>
-          <button type="button" class="switch" data-mode="life" aria-pressed="true">◌　くらし</button>
-          <button type="button" class="switch" data-mode="study" aria-pressed="false">▧　まなび</button>
-        </div>
-        <div class="switch-group" role="group" aria-label="計画の単位を選択">
-          <span class="switch-label">SCALE</span>
-          <button type="button" class="switch" data-scale="clock" aria-pressed="true">時刻から逆算</button>
-          <button type="button" class="switch" data-scale="days" aria-pressed="false">日付から逆算</button>
+    <main id="main" class="main">
+      <div id="storage-warning" class="alert" role="alert" hidden>
+        <strong>以前の保存データを読み込めませんでした。</strong>
+        <p>上書きを防ぐため、編集内容は保存しません。まず元データをバックアップしてから、必要に応じて新規に作成してください。</p>
+        <div class="inline-actions">
+          <button type="button" class="button button-quiet" id="backup-raw">元データを保存</button>
+          <button type="button" class="button button-quiet" id="reset-corrupt">確認して初期化</button>
         </div>
       </div>
 
-      <div class="workspace">
-        <section class="editor-panel panel" aria-labelledby="editor-title">
-          <div class="section-head">
-            <div><p class="section-number">01 / INPUT</p><h2 id="editor-title">計画をつくる</h2></div>
-            <button type="button" class="link-button" id="example-button">サンプルに戻す ↺</button>
+      <nav class="step-bar" aria-label="進み具合" id="step-bar" hidden>
+        <span id="step-label">STEP 1 / 3</span>
+        <div class="step-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <button type="button" class="back-link" id="back-button">← もどる</button>
+      </nav>
+
+      <section id="screen-home" class="screen" aria-labelledby="home-title">
+        <div class="home-hero">
+          <span class="eyebrow"><span class="spark">✳</span> YOUR LITTLE ADVENTURE</span>
+          <span class="pixel-sun" aria-hidden="true">✳</span>
+          <h1 id="home-title" tabindex="-1">いつまでに<br><span>終わらせたい？</span></h1>
+          <p class="intro">ゴールを決めたら、始める時間が見えてくる。<br>まずは、どっちの計画をつくる？</p>
+        </div>
+        <div class="choice-grid" role="group" aria-label="計画の種類">
+          <button type="button" class="choice-card mint pixel-press" data-choose-scale="clock">
+            <span class="choice-art" aria-hidden="true"><span class="pixel-clock"><i></i></span></span>
+            <span class="choice-copy"><small>TIME QUEST</small><strong>何時まで？</strong><span>今日の準備や、短い作業に</span></span>
+            <span class="choice-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button type="button" class="choice-card peach pixel-press" data-choose-scale="days">
+            <span class="choice-art" aria-hidden="true"><span class="pixel-calendar"><i></i></span></span>
+            <span class="choice-copy"><small>DAY QUEST</small><strong>何日まで？</strong><span>宿題や、テストまでの予定に</span></span>
+            <span class="choice-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <div id="resume-card" class="resume-card" hidden>
+          <div><span class="mini-label">CONTINUE</span><strong>前の計画のつづき</strong><small id="resume-description">保存した予定から再開できます。</small></div>
+          <button type="button" class="button button-secondary" id="resume-button">つづきから →</button>
+        </div>
+        <p class="privacy-note">✦ アカウント不要。計画はこのブラウザ内だけに保存されます。</p>
+      </section>
+
+      <section id="screen-setup" class="screen" aria-labelledby="setup-title" hidden>
+        <div class="screen-header">
+          <span class="eyebrow">01 / BUILD YOUR QUEST</span>
+          <h1 id="setup-title" tabindex="-1">やることを<br><span>ならべてみよう。</span></h1>
+          <p>時間の見積もりは、おおよそで大丈夫。あとから直せます。</p>
+        </div>
+        <div class="panel setup-panel">
+          <div class="section-top"><span class="section-marker">1</span><h2 id="goal-heading">ゴールを決めよう</h2></div>
+          <div id="clock-fields">
+            <label for="clock-deadline" class="field-label">いつまでに終わらせる？</label>
+            <input id="clock-deadline" type="datetime-local" class="field-control">
           </div>
-          <div class="fields">
-            <div id="clock-fields">
-              <label class="field-label" for="clock-deadline">いつまでに終えたい？</label>
-              <input id="clock-deadline" class="form-control" type="datetime-local" aria-describedby="clock-caption">
-              <p class="field-help" id="clock-caption">この時刻をゴールにして、開始時間を逆算します。</p>
-              <label class="field-label field-next" for="clock-buffer">予備・調整時間（分）</label>
-              <input id="clock-buffer" class="form-control narrow" type="number" min="0" max="240" step="5" inputmode="numeric">
+          <div id="days-fields" hidden>
+            <label for="days-deadline" class="field-label">何日までに終わらせる？</label>
+            <input id="days-deadline" type="date" class="field-control">
+          </div>
+        </div>
+        <div class="panel setup-panel">
+          <div class="section-top"><span class="section-marker">2</span><h2>やることを登録</h2><span class="counter" id="task-count">0こ</span></div>
+          <div class="preset-area">
+            <p class="mini-label">まずはサンプルからでもOK</p>
+            <div class="preset-list" id="preset-list"></div>
+          </div>
+          <ul class="task-list" id="task-list" aria-label="やること一覧"></ul>
+          <form id="add-task-form" class="add-task">
+            <div class="add-fields">
+              <label class="field-label" for="new-task-name">やること</label>
+              <input id="new-task-name" type="text" class="field-control" placeholder="例：数学のワーク" maxlength="80" required>
             </div>
-            <div id="days-fields" hidden>
-              <label class="field-label" for="days-deadline">何日までに終えたい？</label>
-              <input id="days-deadline" class="form-control" type="date" aria-describedby="days-caption">
-              <p class="field-help" id="days-caption">今日から締切日までの間に、作業を日割りします。</p>
-              <div class="field-pair">
-                <div><label class="field-label field-next" for="daily-limit">1日に使える時間（分）</label><input id="daily-limit" class="form-control" type="number" min="5" max="720" step="5" inputmode="numeric"></div>
-                <div><label class="field-label field-next" for="reserve-days">予備日（日）</label><input id="reserve-days" class="form-control" type="number" min="0" max="30" step="1" inputmode="numeric"></div>
+            <div class="add-fields minutes-field">
+              <label class="field-label" for="new-task-minutes">時間（分）</label>
+              <input id="new-task-minutes" type="number" class="field-control" min="1" max="1440" inputmode="numeric" value="15" required>
+            </div>
+            <button type="submit" class="button button-primary pixel-press add-submit">＋ 追加</button>
+          </form>
+          <div class="duration-chips" role="group" aria-label="追加するタスクの所要時間">
+            <span class="chip-caption">かんたん入力</span>
+            <button type="button" data-minutes="5">5分</button><button type="button" data-minutes="10">10分</button><button type="button" data-minutes="15">15分</button><button type="button" data-minutes="30">30分</button><button type="button" data-minutes="60">60分</button>
+          </div>
+        </div>
+        <details class="panel detail-panel" id="advanced-settings">
+          <summary><span aria-hidden="true">⚙</span> くわしく設定 <span class="accordion-arrow" aria-hidden="true">⌄</span></summary>
+          <div class="advanced-content">
+            <div id="clock-settings">
+              <label for="clock-buffer" class="field-label">余裕時間（分）</label>
+              <input id="clock-buffer" type="number" class="field-control short" min="0" max="240" value="10">
+            </div>
+            <div id="days-settings" hidden>
+              <div class="settings-pair">
+                <div><label for="daily-limit" class="field-label">1日の作業時間（分）</label><input id="daily-limit" type="number" class="field-control" min="5" max="720" value="60"></div>
+                <div><label for="reserve-days" class="field-label">予備日（日）</label><input id="reserve-days" type="number" class="field-control" min="0" max="30" value="1"></div>
               </div>
               <fieldset class="weekday-settings">
-                <legend class="field-label">計画を入れない曜日</legend>
+                <legend class="field-label">お休みの曜日</legend>
                 <div class="weekday-list" id="off-day-list">
                   <label><input type="checkbox" value="0" data-off-day><span>日</span></label>
                   <label><input type="checkbox" value="1" data-off-day><span>月</span></label>
@@ -83,47 +128,59 @@
               </fieldset>
             </div>
           </div>
-          <div class="task-topline">
-            <div><h3>やること</h3><p>上から順に取り組む予定です。時間は後から調整できます。</p></div>
-            <span id="task-count" class="count-label"></span>
-          </div>
-          <ul id="task-list" class="task-list" aria-label="作業一覧"></ul>
-          <form class="add-task" id="add-task-form">
-            <label class="visually-hidden" for="new-task-name">追加する作業名</label>
-            <input class="form-control task-name-input" id="new-task-name" type="text" maxlength="80" placeholder="やることを追加" required>
-            <label class="visually-hidden" for="new-task-minutes">所要時間（分）</label>
-            <div class="minutes-input"><input class="form-control" id="new-task-minutes" type="number" min="1" max="1440" value="15" required inputmode="numeric"><span>分</span></div>
-            <button class="add-button" type="submit" aria-label="作業を追加">＋</button>
-          </form>
-          <p class="storage-note"><span aria-hidden="true">⌑</span> この端末に自動保存します。アカウント登録やサーバー送信はありません。</p>
-        </section>
+        </details>
+        <div id="setup-error" class="alert" role="alert" hidden></div>
+        <div class="page-cta"><button type="button" id="make-plan" class="button button-primary pixel-press button-large">▶ 予定をつくる</button></div>
+      </section>
 
-        <section class="output-panel panel" aria-labelledby="output-title">
-          <div class="section-head">
-            <div><p class="section-number">02 / YOUR PLAN</p><h2 id="output-title">逆算した予定</h2></div>
-            <span class="live-indicator"><span></span> 自動更新</span>
-          </div>
-          <div class="hero-result" aria-live="polite">
-            <p class="result-label" id="result-label">はじめる目安</p>
-            <div id="result-main" class="result-main">--:--</div>
-            <p id="result-sub" class="result-sub">終了時刻と作業時間から計算します</p>
-            <div id="metrics" class="metrics"></div>
-          </div>
-          <div id="notice" class="notice" role="status" hidden></div>
-          <div class="timeline-head"><h3 id="timeline-title">タイムライン</h3><span id="timeline-hint">上から順に進めよう</span></div>
-          <div id="timeline" class="timeline"></div>
+      <section id="screen-plan" class="screen" aria-labelledby="plan-title" hidden>
+        <div class="screen-header">
+          <span class="eyebrow">02 / YOUR PLAN</span>
+          <h1 id="plan-title" tabindex="-1">こんな予定で<br><span>どうかな？</span></h1>
+          <p>無理があるときは、何度でも調整できます。</p>
+        </div>
+        <div class="plan-result panel">
+          <p class="mini-label" id="result-label">ここから始めよう</p>
+          <div id="result-main" class="result-main">--:--</div>
+          <p id="result-sub" class="result-sub"></p>
+          <div id="metrics" class="metrics"></div>
+        </div>
+        <div class="alert alert-honey" id="notice" role="status" hidden></div>
+        <div class="section-top timeline-heading"><span class="section-marker">✓</span><h2 id="timeline-title">予定のながれ</h2><small id="timeline-hint"></small></div>
+        <div id="timeline" class="timeline"></div>
+        <p id="study-disclaimer" class="study-note" hidden>※まなびモードの試作は時間配分のみです。理解度の判定や復習の自動配置はまだありません。</p>
+        <div class="page-cta plan-actions">
+          <button type="button" id="start-plan" class="button button-primary pixel-press button-large">▶ この計画ではじめる</button>
+          <button type="button" id="edit-plan" class="button button-secondary">↶ やることを直す</button>
+          <button type="button" id="export-button" class="button button-link">↓ JSONで保存</button>
+        </div>
+      </section>
+
+      <section id="screen-run" class="screen" aria-labelledby="run-title" hidden>
+        <div class="screen-header">
+          <span class="eyebrow">03 / TIME TO PLAY</span>
+          <h1 id="run-title" tabindex="-1">いまは、<br><span>これに集中。</span></h1>
+        </div>
+        <div class="focus-card panel">
+          <span class="mini-label">NOW PLAYING ✳</span>
+          <h2 id="focus-task">次の作業</h2>
+          <p id="focus-sub">準備ができたらはじめよう</p>
           <div id="timer-area" class="timer-area" hidden></div>
-          <p id="study-disclaimer" class="study-disclaimer" hidden>※この試作版では「時間の割当」のみを行います。理解度の推定や復習の自動配置は今後の開発対象です。</p>
-          <div class="output-bottom">
-            <button type="button" class="secondary-button" id="export-button">↓ 計画をJSONで保存</button>
-            <span id="save-status" aria-live="polite"></span>
-          </div>
-        </section>
-      </div>
+          <div id="focus-controls" class="focus-controls"></div>
+        </div>
+        <div class="panel run-next">
+          <div class="section-top"><span class="section-marker">→</span><h2>このあとの予定</h2></div>
+          <div id="run-list" class="run-list"></div>
+        </div>
+        <div class="page-cta">
+          <button type="button" id="back-plan" class="button button-secondary">← 予定の全体を見る</button>
+        </div>
+      </section>
     </main>
+
     <footer class="site-footer">
-      <span>Reverse Planner · independent prototype</span>
-      <div><a href="https://github.com/yama-books/reverse-planner" target="_blank" rel="noopener noreferrer">GitHub / 設計資料 ↗</a><span>利用者のデータはこの端末に保存されます</span></div>
+      <span>✳ Reverse Planner · SOFT PIXEL concept</span>
+      <div><span id="save-status" role="status" aria-live="polite"></span><a href="https://github.com/yama-books/reverse-planner" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
     </footer>
   </div>
 </body>
