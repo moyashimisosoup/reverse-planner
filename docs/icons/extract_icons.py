@@ -51,7 +51,7 @@ def main():
             ratio = min(213/crop.width, 173/crop.height)
             crop = crop.resize((max(1,round(crop.width*ratio)),max(1,round(crop.height*ratio))),Image.Resampling.LANCZOS)
         else:
-            crop.thumbnail((231,218),Image.Resampling.LANCZOS)
+            crop.thumbnail((231,213),Image.Resampling.LANCZOS)
         tile = Image.new("RGB",(256,256),"#FFFDF7")
         tile.paste(crop,((256-crop.width)//2,(256-crop.height)//2))
         tile.save(args.output / info["切り出し後推奨ファイル名"])
