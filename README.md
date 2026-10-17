@@ -4,6 +4,12 @@
 
 > Status: **Web prototype v0.1 公開中**（2026-10-17）。GitHub ActionsでテストとPages配信に成功し、公開ページ・アセットのHTTP 200を確認しています。iPhone等の実機操作は未検証です。
 
+## アイコン総合台帳（SOFT PIXEL）
+
+- [個別アイコン台帳：196件](docs/icons/ICON_REGISTRY.csv) / [元画像シート台帳：12枚](docs/icons/SHEETS.csv) / [運用ルール](docs/icons/README.md)
+- **状態**：番号・名前・切り出し予定位置を登録済み。個別画像の切り出し・採用はまだ0件。
+- **素材原本**：会話で生成した元画像12枚の存在は確認済み。画像ファイルそのものはGitHub未保存で、別途保管用ZIPにまとめています。
+
 ## v0.2 UI/UXリニューアル計画（設計中）
 
 - [SOFT PIXEL UI/UX詳細計画](docs/UI_V02_PLAN.md)：レトロゲーム風の柔らかい8bit表現、HOME→入力→計画→実行の一本道、データ互換、検証基準。
