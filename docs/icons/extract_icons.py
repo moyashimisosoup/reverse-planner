@@ -46,7 +46,12 @@ def main():
         if not(0 <= x0 < x1 <= original.width and 0 <= y0 < y1 <= original.height):
             raise ValueError("Invalid rectangle for "+key)
         crop = original.crop((x0,y0,x1,y1))
-        crop.thumbnail((232,226),Image.Resampling.LANCZOS)
+        if info["シートID"] in ("S11","S12"):
+            # Draft icon catalog cells are tiny. Enlarge evenly for review.
+            ratio = min(213/crop.width, 173/crop.height)
+            crop = crop.resize((max(1,round(crop.width*ratio)),max(1,round(crop.height*ratio))),Image.Resampling.LANCZOS)
+        else:
+            crop.thumbnail((231,218),Image.Resampling.LANCZOS)
         tile = Image.new("RGB",(256,256),"#FFFDF7")
         tile.paste(crop,((256-crop.width)//2,(256-crop.height)//2))
         tile.save(args.output / info["切り出し後推奨ファイル名"])
